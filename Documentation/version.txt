@@ -61,6 +61,10 @@ Version:
 	2.75	28 Mar 2014  -  added support for Coldtears 5" and 7" CPLD modules
 	2.76	04 May 2014  -  added support for several display modules from DisplayModule
 	2.77	24 May 2014  -  fixed a bug with the ElecHouse 7" display and shield combination
-	2.77a	20 June 2014 -	mod by NIC, add ili9327 8-bit mode, test colour bar
 	2.78	08 Sep 2014  -  fixed compatibility-issues with Arduino 1.5.7
-
+	2.79	28 Sep 2014  -  added support for more display shields and modules from ElecFreaks
+				removed all support for display modules from GE-Tech (including the ILI9320 driver)
+	2.80	17 May 2015  -  added support TI CC3200 LaunchPad
+				fixed a bug with transparent text so it is faster than it was
+				updated tools to support TI CC3200 LaunchPad
+	2.81	21 May 2015  -  fixed a bug which stopped the library from compiling with Arduino 1.6.x

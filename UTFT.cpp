@@ -1,6 +1,6 @@
 /*
-  UTFT.cpp - Arduino/chipKit library support for Color TFT LCD Boards
-  Copyright (C)2010-2014 Henning Karlsen. All right reserved
+  UTFT.cpp - Multi-Platform library support for Color TFT LCD Boards
+  Copyright (C)2015 Rinky-Dink Electronics, Henning Karlsen. All right reserved
   
   This library is the continuation of my ITDB02_Graph, ITDB02_Graph16
   and RGB_GLCD libraries for Arduino and chipKit. As the number of 
@@ -13,22 +13,17 @@
   NKC Electronics (for the RGB GLCD module/shield).
 
   This library supports a number of 8bit, 16bit and serial graphic 
-  displays, and will work with both Arduino and chipKit boards. For a 
-  full list of tested display modules and controllers, see the 
-  document UTFT_Supported_display_modules_&_controllers.pdf.
+  displays, and will work with both Arduino, chipKit boards and select 
+  TI LaunchPads. For a full list of tested display modules and controllers,
+  see the document UTFT_Supported_display_modules_&_controllers.pdf.
 
   When using 8bit and 16bit display modules there are some 
   requirements you must adhere to. These requirements can be found 
   in the document UTFT_Requirements.pdf.
   There are no special requirements when using serial displays.
 
-  You can always find the latest version of the library at 
-  http://electronics.henningkarlsen.com/
-
-  If you make any modifications or improvements to the code, I would 
-  appreciate that you share the code with me so that I might include 
-  it in the next release. I can be contacted through 
-  http://electronics.henningkarlsen.com/contact.php.
+  You can find the latest version of the library at 
+  http://www.RinkyDinkElectronics.com/
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the CC BY-NC-SA 3.0 license.
@@ -84,6 +79,9 @@
 	#elif defined(__MK20DX128__) || defined(__MK20DX256__)
 		#pragma message("Compiling for Teensy 3.x (MK20DX128VLH7 / MK20DX256VLH7)...")
 		#include "hardware/arm/HW_MX20DX256.h"
+	#elif defined(__CC3200R1M1RGC__)
+		#pragma message("Compiling for TI CC3200 LaunchPad...")
+		#include "hardware/arm/HW_CC3200.h"
 	#else
 		#error "Unsupported ARM MCU!"
 	#endif
@@ -96,9 +94,9 @@ UTFT::UTFT()
 
 UTFT::UTFT(byte model, int RS, int WR, int CS, int RST, int SER)
 { 
-	word	dsx[] = {239, 239, 239, 239, 239, 239, 175, 175, 239, 127, 127, 239, 271, 479, 239, 239, 239, 239, 239, 239, 479, 319, 239, 175, 127, 239, 239, 319, 319, 799, 127, 239};
-	word	dsy[] = {319, 399, 319, 319, 319, 319, 219, 219, 399, 159, 127, 319, 479, 799, 319, 319, 319, 319, 319, 319, 799, 479, 319, 219, 159, 319, 319, 479, 479, 479, 159, 399};
-	byte	dtm[] = {16, 16, 16, 8, 8, 16, 8, SERIAL_4PIN, 16, SERIAL_5PIN, SERIAL_5PIN, 16, 16, 16, 8, 16, LATCHED_16, 8, 16, 8, 16, 16, 16, 8, SERIAL_5PIN, SERIAL_5PIN, SERIAL_4PIN, 16, 16, 16, SERIAL_5PIN, 8};
+	word	dsx[] = {239, 239, 239, 239, 239, 239, 175, 175, 239, 127, 127, 239, 271, 479, 239, 239, 239, 239, 239, 239, 479, 319, 239, 175, 127, 239, 239, 319, 319, 799, 127, 127, 239};
+	word	dsy[] = {319, 399, 319, 319, 319, 319, 219, 219, 399, 159, 127, 319, 479, 799, 319, 319, 319, 319, 319, 319, 799, 479, 319, 219, 159, 319, 319, 479, 479, 479, 159, 159, 399};
+	byte	dtm[] = {16, 16, 16, 8, 8, 16, 8, SERIAL_4PIN, 16, SERIAL_5PIN, SERIAL_5PIN, 16, 16, 16, 8, 16, LATCHED_16, 8, 16, 8, 16, 16, 16, 8, SERIAL_5PIN, SERIAL_5PIN, SERIAL_4PIN, 16, 16, 16, SERIAL_5PIN, SERIAL_5PIN 8};
 
 	disp_x_size =			dsx[model];
 	disp_y_size =			dsy[model];
@@ -113,8 +111,8 @@ UTFT::UTFT(byte model, int RS, int WR, int CS, int RST, int SER)
 
 	if (display_transfer_mode == SERIAL_4PIN)
 	{
-			display_transfer_mode=1;
-			display_serial_mode=SERIAL_4PIN;
+		display_transfer_mode=1;
+		display_serial_mode=SERIAL_4PIN;
 	}
 	if (display_transfer_mode == SERIAL_5PIN)
 	{
@@ -268,7 +266,10 @@ void UTFT::InitLCD(byte orientation)
 	#include "tft_drivers/hx8340b/s/initlcd.h"
 #endif
 #ifndef DISABLE_ST7735
-	#include "tft_drivers/st7735/initlcd.h"
+	#include "tft_drivers/st7735/std/initlcd.h"
+#endif
+#ifndef DISABLE_ST7735_ALT
+	#include "tft_drivers/st7735/alt/initlcd.h"
 #endif
 #ifndef DISABLE_PCF8833
 	#include "tft_drivers/pcf8833/initlcd.h"
@@ -375,7 +376,10 @@ void UTFT::setXY(word x1, word y1, word x2, word y2)
 	#include "tft_drivers/hx8340b/s/setxy.h"
 #endif
 #ifndef DISABLE_ST7735
-	#include "tft_drivers/st7735/setxy.h"
+	#include "tft_drivers/st7735/std/setxy.h"
+#endif
+#ifndef DISABLE_ST7735_ALT
+	#include "tft_drivers/st7735/alt/setxy.h"
 #endif
 #ifndef DISABLE_S1D19122
 	#include "tft_drivers/s1d19122/setxy.h"
@@ -784,7 +788,7 @@ void UTFT::drawLine(int x1, int y1, int x2, int y2)
 			while (true)
 			{
 				setXY (col, row, col, row);
-				LCD_Write_DATA(fch, fcl);
+				LCD_Write_DATA (fch, fcl);
 				if (row == y2)
 					return;
 				row += ystep;
@@ -802,7 +806,7 @@ void UTFT::drawLine(int x1, int y1, int x2, int y2)
 			while (true)
 			{
 				setXY (col, row, col, row);
-				LCD_Write_DATA(fch, fcl);
+				LCD_Write_DATA (fch, fcl);
 				if (col == x2)
 					return;
 				col += xstep;
@@ -947,10 +951,10 @@ void UTFT::printChar(byte c, int x, int y)
 				ch=pgm_read_byte(&cfont.font[temp+zz]); 
 				for(i=0;i<8;i++)
 				{   
-					setXY(x+i+(zz*8),y+j,x+i+(zz*8)+1,y+j+1);
 				
 					if((ch&(1<<(7-i)))!=0)   
 					{
+						setXY(x+i+(zz*8),y+j,x+i+(zz*8)+1,y+j+1);
 						setPixel((fch<<8)|fcl);
 					} 
 				}

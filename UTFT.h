@@ -1,6 +1,6 @@
 /*
-  UTFT.h - Arduino/chipKit library support for Color TFT LCD Boards
-  Copyright (C)2010-2014 Henning Karlsen. All right reserved
+  UTFT.h - Multi-Platform library support for Color TFT LCD Boards
+  Copyright (C)2015 Rinky-Dink Electronics, Henning Karlsen. All right reserved
   
   This library is the continuation of my ITDB02_Graph, ITDB02_Graph16
   and RGB_GLCD libraries for Arduino and chipKit. As the number of 
@@ -13,22 +13,17 @@
   NKC Electronics (for the RGB GLCD module/shield).
 
   This library supports a number of 8bit, 16bit and serial graphic 
-  displays, and will work with both Arduino and chipKit boards. For a 
-  full list of tested display modules and controllers, see the 
-  document UTFT_Supported_display_modules_&_controllers.pdf.
+  displays, and will work with both Arduino, chipKit boards and select 
+  TI LaunchPads. For a full list of tested display modules and controllers,
+  see the document UTFT_Supported_display_modules_&_controllers.pdf.
 
   When using 8bit and 16bit display modules there are some 
   requirements you must adhere to. These requirements can be found 
   in the document UTFT_Requirements.pdf.
   There are no special requirements when using serial displays.
 
-  You can always find the latest version of the library at 
-  http://electronics.henningkarlsen.com/
-
-  If you make any modifications or improvements to the code, I would 
-  appreciate that you share the code with me so that I might include 
-  it in the next release. I can be contacted through 
-  http://electronics.henningkarlsen.com/contact.php.
+  You can find the latest version of the library at 
+  http://www.RinkyDinkElectronics.com/
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the CC BY-NC-SA 3.0 license.
@@ -45,7 +40,7 @@
 #ifndef UTFT_h
 #define UTFT_h
 
-#define UTFT_VERSION	278
+#define UTFT_VERSION	281
 
 #define LEFT 0
 #define RIGHT 9999
@@ -85,7 +80,8 @@
 #define ILI9486			28
 #define CPLD			29
 #define HX8353C			30
-#define ILI9327_8		31
+#define ST7735_ALT		31
+#define ILI9327_8		32
 
 #define ITDB32			0	// HX8347-A (16bit)
 #define ITDB32WC		1	// ILI9327  (16bit)
@@ -144,8 +140,9 @@
 #define CTE50CPLD		29	// CPLD		(16bit)
 #define CTE70CPLD		29	// CPLD		(16bit)
 #define DMTFT18101      30  // HX8353C  (Serial 5Pin)
-#define ILI9327_8       31  // ILI9327  (8bit) 400x240
-#define NIC35WS			31	// ILI9327  (8bit)
+#define TFT18SHLD		31	// ST7735	(Serial 5Pin) Alternative Init
+#define ILI9327_8       32  // ILI9327  (8bit) 400x240
+#define NIC35WS			32	// ILI9327  (8bit)
 
 
 #define SERIAL_4PIN		4
@@ -195,7 +192,7 @@
 	#include "WProgram.h"
 	#include "hardware/pic32/HW_PIC32_defines.h"
 #elif defined(__arm__)
-	#include "Arduino.h"
+	#include "Arduino.h" // This will include energia.h where appropriate
 	#include "hardware/arm/HW_ARM_defines.h"
 #endif
 
@@ -289,6 +286,10 @@ class UTFT
 		void _fast_fill_16(int ch, int cl, long pix);
 		void _fast_fill_8(int ch, long pix);
 		void _convert_float(char *buf, double num, int width, byte prec);
+
+#if defined(ENERGIA)
+		volatile uint32_t* portOutputRegister(int value);
+#endif
 };
 
 #endif

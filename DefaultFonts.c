@@ -1,6 +1,6 @@
 // DO NOT ADD YOUR OWN FONTS TO THIS FILE
-// If you want to use your own fonts you should just drop the font .c file into your sketch folder.
-// ------------------------------------------------------------------------------------------------
+// If you want to use your own/downloaded fonts you should just drop the font .c file into your sketch folder.
+// -----------------------------------------------------------------------------------------------------------
 
 #if defined(__AVR__)
 	#include <avr/pgmspace.h>
