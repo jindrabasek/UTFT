@@ -82,6 +82,7 @@
 #define HX8353C			30
 #define ST7735_ALT		31
 #define ILI9327_8		32
+#define ILI9486_MCU     33
 
 #define ITDB32			0	// HX8347-A (16bit)
 #define ITDB32WC		1	// ILI9327  (16bit)
@@ -143,6 +144,7 @@
 #define TFT18SHLD		31	// ST7735	(Serial 5Pin) Alternative Init
 #define ILI9327_8       32  // ILI9327  (8bit) 400x240
 #define NIC35WS			32	// ILI9327  (8bit)
+#define ILI9486_MCU     33  // ILI9327  (8bit) 480x320
 
 
 #define SERIAL_4PIN		4
